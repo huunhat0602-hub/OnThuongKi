@@ -1,0 +1,61 @@
+package com.example.ktthuongki;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.List;
+
+public class CustomAdapter extends ArrayAdapter<User> {
+    private Context context;
+    private int resource;
+    private List<User> userList;
+
+    public CustomAdapter(@NonNull Context context, int resource, @NonNull List<User> objects) {
+        super(context, resource, objects);
+        this.context=context;
+        this.resource=resource;
+        this.userList=objects;
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    ViewHolder viewHolder;
+    if(convertView==null){
+        convertView= LayoutInflater.from(context).inflate(R.layout.item_listview_user,parent,false);
+        viewHolder=new ViewHolder();
+        viewHolder.tvName=(TextView)convertView.findViewById(R.id.tvName);
+        viewHolder.tvSdt=(TextView)convertView.findViewById(R.id.tv_sdt);
+        viewHolder.tvDiaChi=(TextView)convertView.findViewById(R.id.tvDiaChi);
+        viewHolder.tvEmail=(TextView)convertView.findViewById(R.id.tvEmail);
+
+        convertView.setTag(viewHolder);
+
+
+    }else{
+        viewHolder=(ViewHolder)convertView.getTag();
+    }
+        User user=userList.get(position);
+        viewHolder.tvName.setText(user.getName());
+        viewHolder.tvSdt.setText(user.getSdt());
+        viewHolder.tvDiaChi.setText(user.getDiaChi());
+        viewHolder.tvEmail.setText(user.getEmail());
+
+        return convertView;
+    }
+    //tao truoc
+    public class ViewHolder{
+        private TextView tvName;
+        private TextView tvSdt;
+        private TextView tvDiaChi;
+        private TextView tvEmail;
+    }
+}

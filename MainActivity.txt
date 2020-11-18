@@ -1,0 +1,88 @@
+package com.example.ktthuongki;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+    DatabaseUser databaseUser;
+
+    Button btnSave;
+    EditText edtName,edtSdt,edtDiaChi,edtEmail;
+    ListView lv_user;
+    private List<User> userList;
+    private CustomAdapter customAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        DatabaseUser databaseUser=new DatabaseUser(this,
+                "user.sqlite",null,1);
+        edtName=findViewById(R.id.edt_name);
+        edtSdt=findViewById(R.id.edt_sdt);
+        edtDiaChi=findViewById(R.id.edt_diaChi);
+        edtEmail=findViewById(R.id.edt_email);
+
+        btnSave=findViewById(R.id.btn_luu);
+        lv_user=findViewById(R.id.lv_user);
+        //hien thi len list
+        userList=databaseUser.getAllUser();
+        setAdapter();
+
+        //add
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User user=creUser();
+                if(user!=null) {
+                    databaseUser.addUser(user);
+
+                }
+                userList.clear();
+                userList.addAll(databaseUser.getAllUser());
+                setAdapter();
+            }
+        });
+
+
+//        databaseUser.addUser(new User(
+//                "Huu Nhat","013342244","IUH","99nhatcy@gmail.com"));
+//        databaseUser.addUser(new User(
+//                "Minh Hoang","013315154","IUH","minhhoang@gmail.com"));
+//        databaseUser.addUser(new User(
+//                "Bao An","092452244","IUH","baoan12cy@gmail.com"));
+//        databaseUser.addUser(new User(
+//                "Hoang Huu","034512224","IUH","8987nnhatbaoany@gmail.com"));
+    }
+
+    //hien thi len list
+    private void setAdapter(){
+        if(customAdapter==null){
+            customAdapter=new CustomAdapter(this,R.layout.item_listview_user,userList);
+            lv_user.setAdapter(customAdapter);
+        }else{
+            customAdapter.notifyDataSetChanged();
+            lv_user.setSelection(customAdapter.getCount()-1);
+        }
+
+    }
+    //add
+    private User creUser(){
+        String name=edtName.getText().toString();
+        String address=edtDiaChi.getText().toString();
+        String phonnumber=edtSdt.getText().toString();
+        String email=edtEmail.getText().toString();
+        User user=new User(name,address,phonnumber,email);
+        return user;
+
+    }
+
+}
